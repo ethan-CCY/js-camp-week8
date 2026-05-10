@@ -11,6 +11,7 @@ const dayjs = require('dayjs');
  */
 function getDiscountRate(product) {
   // 請實作此函式
+  return `${Math.round(product.price / product.origin_price * 10)}折`;
 }
 
 /**
@@ -20,6 +21,7 @@ function getDiscountRate(product) {
  */
 function getAllCategories(products) {
   // 請實作此函式
+  return [...new Set(products.map(product => product.category))];
 }
 
 /**
@@ -30,6 +32,7 @@ function getAllCategories(products) {
 function formatDate(timestamp) {
   // 請實作此函式
   // 提示：dayjs.unix...
+  return dayjs.unix(timestamp).format('YYYY/MM/DD HH:mm');
 }
 
 /**
@@ -43,6 +46,9 @@ function getDaysAgo(timestamp) {
   // 1. 用 dayjs() 取得今天
   // 2. 用 dayjs.unix(timestamp) 取得日期
   // 3. 用 .diff() 計算天數差異
+  const today = dayjs();
+  const diff = today.diff(dayjs.unix(timestamp), 'day')
+  return diff === 0 ? '今天' : `${diff} 天前`
 }
 
 /**
@@ -59,6 +65,29 @@ function getDaysAgo(timestamp) {
  */
 function validateOrderUser(data) {
   // 請實作此函式
+  const errors = [];
+  const telRegex = /^09\d{8}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validPayments = ["ATM", "Credit Card", "Apple Pay"];
+
+  if (!data.name || data.name.trim().length ===0){
+    errors.push("名字不可為空");
+  }
+  if (!data.address || data.address.trim().length ===0){
+    errors.push("地址不可為空");
+  }
+
+  if (!telRegex.test(data.tel)){
+    errors.push("電話必須是 09 開頭的 10 位數字");
+  }
+  if (!emailRegex.test(data.email)){
+    errors.push("email格式錯誤");
+  }
+  if (!validPayments.includes(data.payment)){
+    errors.push("付款方式必須是 'ATM', 'Credit Card', 'Apple Pay' 其中之一");
+  }
+
+  return { isValid: errors.length === 0, errors};
 }
 
 /**
@@ -73,6 +102,18 @@ function validateOrderUser(data) {
  */
 function validateCartQuantity(quantity) {
   // 請實作此函式
+  let error = '';
+  if (!Number.isInteger(quantity)){
+    return { isValid: false, error: "數量必須是正整數"};
+  }
+  if (quantity < 1){
+    return { isValid: false, error: "不可小於 1"};
+  }
+  if (quantity > 99){
+    return { isValid: false, error: "大於 99"};
+  }
+
+  return { isValid: true };
 }
 
 /**
@@ -92,6 +133,7 @@ function validateCartQuantity(quantity) {
  */
 function formatCurrency(amount) {
   // 請實作此函式
+  return `NT$ ${amount.toLocaleString('zh-TW')}`
 }
 
 module.exports = {
