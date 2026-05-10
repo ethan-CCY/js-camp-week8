@@ -473,166 +473,166 @@ const mockOrdersData = [
 // ========================================
 // 測試三：產品服務
 // ========================================
-describe('測試三：產品服務', () => {
+// describe('測試三：產品服務', () => {
 
-  // 從測試三開始，用 mockResolvedValue 覆蓋測試一設定的真實實作
-  // 每個 describe 的 beforeEach 會在「檔案層級 beforeEach（clearAllMocks）」之後執行
-  beforeEach(() => {
-    api.fetchProducts.mockResolvedValue(mockApiProducts);
-  });
+//   // 從測試三開始，用 mockResolvedValue 覆蓋測試一設定的真實實作
+//   // 每個 describe 的 beforeEach 會在「檔案層級 beforeEach（clearAllMocks）」之後執行
+//   beforeEach(() => {
+//     api.fetchProducts.mockResolvedValue(mockApiProducts);
+//   });
 
-  describe('getProducts', () => {
-    test('應回傳物件', async () => {
-      const result = await productService.getProducts();
-      expect(typeof result).toBe('object');
-      expect(result).not.toBeNull();
-    });
+//   describe('getProducts', () => {
+//     test('應回傳物件', async () => {
+//       const result = await productService.getProducts();
+//       expect(typeof result).toBe('object');
+//       expect(result).not.toBeNull();
+//     });
 
-    test('count 應為數字且等於 products 長度', async () => {
-      const result = await productService.getProducts();
-      expect(typeof result.count).toBe('number');
-      expect(result.count).toBe(result.products.length);
-    });
+//     test('count 應為數字且等於 products 長度', async () => {
+//       const result = await productService.getProducts();
+//       expect(typeof result.count).toBe('number');
+//       expect(result.count).toBe(result.products.length);
+//     });
 
-    test('應只呼叫一次 fetchProducts', async () => {
-      await productService.getProducts();
-      expect(api.fetchProducts).toHaveBeenCalledTimes(1);
-    });
-  });
+//     test('應只呼叫一次 fetchProducts', async () => {
+//       await productService.getProducts();
+//       expect(api.fetchProducts).toHaveBeenCalledTimes(1);
+//     });
+//   });
 
-  describe('getProductsByCategory', () => {
-    // 【注意】mock 版直接使用假資料裡的分類名稱，不需要先呼叫 getCategories() 取得真實分類
-    test('應回傳符合分類的陣列', async () => {
-      const result = await productService.getProductsByCategory('衣服');
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.every(p => p.category === '衣服')).toBe(true);
-    });
+//   describe('getProductsByCategory', () => {
+//     // 【注意】mock 版直接使用假資料裡的分類名稱，不需要先呼叫 getCategories() 取得真實分類
+//     test('應回傳符合分類的陣列', async () => {
+//       const result = await productService.getProductsByCategory('衣服');
+//       expect(Array.isArray(result)).toBe(true);
+//       expect(result.every(p => p.category === '衣服')).toBe(true);
+//     });
 
-    test('不存在的分類應回傳空陣列', async () => {
-      const result = await productService.getProductsByCategory('不存在的分類');
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBe(0);
-    });
-  });
+//     test('不存在的分類應回傳空陣列', async () => {
+//       const result = await productService.getProductsByCategory('不存在的分類');
+//       expect(Array.isArray(result)).toBe(true);
+//       expect(result.length).toBe(0);
+//     });
+//   });
 
-  describe('getProductById', () => {
-    // 【注意】mock 版直接使用假資料裡已知的 id，不需要先呼叫 getProducts()
-    test('找到的產品應有 id 屬性且 id 正確', async () => {
-      const result = await productService.getProductById('product-1');
-      expect(result).toHaveProperty('id');
-      expect(result.id).toBe('product-1');
-    });
+//   describe('getProductById', () => {
+//     // 【注意】mock 版直接使用假資料裡已知的 id，不需要先呼叫 getProducts()
+//     test('找到的產品應有 id 屬性且 id 正確', async () => {
+//       const result = await productService.getProductById('product-1');
+//       expect(result).toHaveProperty('id');
+//       expect(result.id).toBe('product-1');
+//     });
 
-    test('找不到產品應回傳 null', async () => {
-      expect(await productService.getProductById('不存在的ID')).toBeNull();
-    });
-  });
+//     test('找不到產品應回傳 null', async () => {
+//       expect(await productService.getProductById('不存在的ID')).toBeNull();
+//     });
+//   });
 
-  describe('getCategories', () => {
-    test('應回傳非空字串陣列', async () => {
-      const result = await productService.getCategories();
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-      expect(result.every(cat => typeof cat === 'string')).toBe(true);
-    });
+//   describe('getCategories', () => {
+//     test('應回傳非空字串陣列', async () => {
+//       const result = await productService.getCategories();
+//       expect(Array.isArray(result)).toBe(true);
+//       expect(result.length).toBeGreaterThan(0);
+//       expect(result.every(cat => typeof cat === 'string')).toBe(true);
+//     });
 
-    // 【Mock 版新增】假資料中「衣服」出現兩次，可明確驗證去重邏輯
-    test('應去除重複分類（衣服出現兩次，結果應只有一次）', async () => {
-      const result = await productService.getCategories();
-      const uniqueResult = [...new Set(result)];
-      expect(result.length).toBe(uniqueResult.length);
-    });
-  });
-});
+//     // 【Mock 版新增】假資料中「衣服」出現兩次，可明確驗證去重邏輯
+//     test('應去除重複分類（衣服出現兩次，結果應只有一次）', async () => {
+//       const result = await productService.getCategories();
+//       const uniqueResult = [...new Set(result)];
+//       expect(result.length).toBe(uniqueResult.length);
+//     });
+//   });
+// });
 
 // ========================================
 // 測試四：購物車服務
 // ========================================
-// describe('測試四：購物車服務', () => {
+describe('測試四：購物車服務', () => {
 
-//   describe('getCart', () => {
-//     test('應回傳含 carts、total、finalTotal 的物件', async () => {
-//       api.fetchCart.mockResolvedValue(mockCartData);
+  describe('getCart', () => {
+    test('應回傳含 carts、total、finalTotal 的物件', async () => {
+      api.fetchCart.mockResolvedValue(mockCartData);
 
-//       const result = await cartService.getCart();
-//       expect(typeof result).toBe('object');
-//       expect(result).not.toBeNull();
-//       expect(Array.isArray(result.carts)).toBe(true);
-//       expect(result).toHaveProperty('total');
-//       expect(result).toHaveProperty('finalTotal');
-//     });
-//   });
+      const result = await cartService.getCart();
+      expect(typeof result).toBe('object');
+      expect(result).not.toBeNull();
+      expect(Array.isArray(result.carts)).toBe(true);
+      expect(result).toHaveProperty('total');
+      expect(result).toHaveProperty('finalTotal');
+    });
+  });
 
-//   describe('addProductToCart', () => {
-//     test('有效加入應回傳 success: true 且有 data 屬性', async () => {
-//       api.addToCart.mockResolvedValue(mockCartData);
+  describe('addProductToCart', () => {
+    test('有效加入應回傳 success: true 且有 data 屬性', async () => {
+      api.addToCart.mockResolvedValue(mockCartData);
 
-//       const result = await cartService.addProductToCart('product-1', 1);
-//       expect(result.success).toBe(true);
-//       expect(result).toHaveProperty('data');
-//     });
+      const result = await cartService.addProductToCart('product-1', 1);
+      expect(result.success).toBe(true);
+      expect(result).toHaveProperty('data');
+    });
 
-//     // 【重點示範】驗證失敗應在 API 呼叫前就被擋下來
-//     test('無效數量應回傳 success: false 且有 error 屬性', async () => {
-//       const result = await cartService.addProductToCart('any-id', -1);
-//       expect(result.success).toBe(false);
-//       expect(result).toHaveProperty('error');
+    // 【重點示範】驗證失敗應在 API 呼叫前就被擋下來
+    test('無效數量應回傳 success: false 且有 error 屬性', async () => {
+      const result = await cartService.addProductToCart('any-id', -1);
+      expect(result.success).toBe(false);
+      expect(result).toHaveProperty('error');
 
-//       // 驗證 addToCart 根本沒被呼叫（因為在驗證就失敗了）
-//       expect(api.addToCart).not.toHaveBeenCalled();
-//     });
-//   });
+      // 驗證 addToCart 根本沒被呼叫（因為在驗證就失敗了）
+      expect(api.addToCart).not.toHaveBeenCalled();
+    });
+  });
 
-//   describe('updateProduct', () => {
-//     // 【重點示範】同上，無效數量應在呼叫 API 前就被擋下來
-//     test('無效數量應回傳 success: false 且有 error 屬性', async () => {
-//       const result = await cartService.updateProduct('test-cart-id', -1);
-//       expect(result.success).toBe(false);
-//       expect(result).toHaveProperty('error');
+  describe('updateProduct', () => {
+    // 【重點示範】同上，無效數量應在呼叫 API 前就被擋下來
+    test('無效數量應回傳 success: false 且有 error 屬性', async () => {
+      const result = await cartService.updateProduct('test-cart-id', -1);
+      expect(result.success).toBe(false);
+      expect(result).toHaveProperty('error');
 
-//       // 驗證 updateCartItem 沒被呼叫
-//       expect(api.updateCartItem).not.toHaveBeenCalled();
-//     });
+      // 驗證 updateCartItem 沒被呼叫
+      expect(api.updateCartItem).not.toHaveBeenCalled();
+    });
 
-//     test('應回傳有 success 屬性的物件', async () => {
-//       api.updateCartItem.mockResolvedValue({ message: '已更新' });
+    test('應回傳有 success 屬性的物件', async () => {
+      api.updateCartItem.mockResolvedValue({ message: '已更新' });
 
-//       const result = await cartService.updateProduct('cart-1', 2);
-//       expect(result).toHaveProperty('success');
-//     });
-//   });
+      const result = await cartService.updateProduct('cart-1', 2);
+      expect(result).toHaveProperty('success');
+    });
+  });
 
-//   describe('removeProduct', () => {
-//     test('應回傳 success: true 的物件', async () => {
-//       api.deleteCartItem.mockResolvedValue({ message: '已刪除' });
+  describe('removeProduct', () => {
+    test('應回傳 success: true 的物件', async () => {
+      api.deleteCartItem.mockResolvedValue({ message: '已刪除' });
 
-//       const result = await cartService.removeProduct('cart-1');
-//       expect(result).toHaveProperty('success');
-//       expect(result.success).toBe(true);
-//     });
-//   });
+      const result = await cartService.removeProduct('cart-1');
+      expect(result).toHaveProperty('success');
+      expect(result.success).toBe(true);
+    });
+  });
 
-//   describe('getCartTotal', () => {
-//     test('應有實作且回傳非 null 物件', async () => {
-//       api.fetchCart.mockResolvedValue(mockCartData);
+  describe('getCartTotal', () => {
+    test('應有實作且回傳非 null 物件', async () => {
+      api.fetchCart.mockResolvedValue(mockCartData);
 
-//       const result = await cartService.getCartTotal();
-//       expect(result).toBeDefined();
-//       expect(typeof result).toBe('object');
-//       expect(result).not.toBeNull();
-//     });
+      const result = await cartService.getCartTotal();
+      expect(result).toBeDefined();
+      expect(typeof result).toBe('object');
+      expect(result).not.toBeNull();
+    });
 
-//     test('應有 total、finalTotal、itemCount 屬性（皆為數字），且 itemCount 為非負數', async () => {
-//       api.fetchCart.mockResolvedValue(mockCartData);
+    test('應有 total、finalTotal、itemCount 屬性（皆為數字），且 itemCount 為非負數', async () => {
+      api.fetchCart.mockResolvedValue(mockCartData);
 
-//       const result = await cartService.getCartTotal();
-//       expect(typeof result.total).toBe('number');
-//       expect(typeof result.finalTotal).toBe('number');
-//       expect(typeof result.itemCount).toBe('number');
-//       expect(result.itemCount).toBeGreaterThanOrEqual(0);
-//     });
-//   });
-// });
+      const result = await cartService.getCartTotal();
+      expect(typeof result.total).toBe('number');
+      expect(typeof result.finalTotal).toBe('number');
+      expect(typeof result.itemCount).toBe('number');
+      expect(result.itemCount).toBeGreaterThanOrEqual(0);
+    });
+  });
+});
 
 // ========================================
 // 測試五：訂單服務
